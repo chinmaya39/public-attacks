@@ -4,9 +4,7 @@
     description="Bandit"
     progid="Bandit"
     version="1.00"
-    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
-	>
-
+    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}">
 </registration>
 
 <public>
@@ -14,13 +12,10 @@
 </public>
 <script language="JScript">
 <![CDATA[
-
-	function Exec()
-	{
-		var r = new ActiveXObject("WScript.Shell").Run("calc.exe");
-	}
-
+    function Exec() {
+        var shell = new ActiveXObject("WScript.Shell");
+        shell.Run("calc.exe");
+    }
 ]]>
 </script>
-
 </scriptlet>
